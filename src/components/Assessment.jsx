@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Clock, BookOpen, ChevronLeft, ChevronRight, Flag, Save, AlertTriangle } from 'lucide-react'
 import '../assessment.css'
 
-const Assessment = ({ user, onLogout }) => {
+const Assessment = ({ user }) => {
   const { id } = useParams()
   const navigate = useNavigate()
   
@@ -59,7 +59,7 @@ const Assessment = ({ user, onLogout }) => {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [handleSubmit])
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600)
@@ -97,11 +97,11 @@ const Assessment = ({ user, onLogout }) => {
     setFlaggedQuestions(newFlagged)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     // Save answers and navigate back
     localStorage.setItem(`assessment_${id}_answers`, JSON.stringify(answers))
     navigate('/student')
-  }
+  }, [id, answers, navigate])
 
   const getAnsweredCount = () => {
     return Object.keys(answers).length
