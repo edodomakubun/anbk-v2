@@ -33,6 +33,45 @@ const TeacherDashboard = ({ user, onLogout }) => {
     { id: 3, name: 'Rudi Hartono', nisn: '1234567892', class: '6B', literasi: 70, numerasi: 65, karakter: 80 }
   ])
 
+  const [selectedClass, setSelectedClass] = useState('')
+
+  // Action handlers
+  const handleViewAssessment = (assessmentId) => {
+    alert(`Melihat detail asesmen ID: ${assessmentId}`)
+    // Here you can add navigation to assessment detail page
+  }
+
+  const handleDownloadReport = (assessmentId) => {
+    alert(`Mengunduh laporan asesmen ID: ${assessmentId}`)
+    // Here you can add download functionality
+  }
+
+  const handleViewStudent = (studentId) => {
+    const student = students.find(s => s.id === studentId)
+    alert(`Melihat detail siswa: ${student.name}\nNISN: ${student.nisn}\nLiterasi: ${student.literasi}\nNumerasi: ${student.numerasi}\nKarakter: ${student.karakter}`)
+    // Here you can add navigation to student detail page
+  }
+
+  const handleCreateAssessment = () => {
+    alert('Membuka form pembuatan asesmen baru')
+    // Here you can add navigation to create assessment form
+  }
+
+  const handleDownloadClassReport = () => {
+    alert('Mengunduh laporan kelas dalam format PDF')
+    // Here you can add PDF download functionality
+  }
+
+  const handleDownloadIndividualReport = () => {
+    alert('Mengunduh laporan individual dalam format Excel')
+    // Here you can add Excel download functionality
+  }
+
+  const handleViewAnalysis = () => {
+    alert('Menampilkan analisis soal dan tingkat kesulitan')
+    // Here you can add navigation to analysis page
+  }
+
   const OverviewTab = () => (
     <div className="overview-content">
       <div className="stats-grid">
@@ -96,7 +135,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
     <div className="assessments-content">
       <div className="section-header">
         <h3>Kelola Asesmen</h3>
-        <button className="add-btn">
+        <button className="add-btn" onClick={handleCreateAssessment}>
           <Plus size={16} />
           Buat Asesmen Baru
         </button>
@@ -130,10 +169,18 @@ const TeacherDashboard = ({ user, onLogout }) => {
                 </td>
                 <td>
                   <div className="action-buttons">
-                    <button className="action-btn view">
+                    <button 
+                      className="action-btn view" 
+                      onClick={() => handleViewAssessment(assessment.id)}
+                      title="Lihat Detail"
+                    >
                       <Eye size={14} />
                     </button>
-                    <button className="action-btn download">
+                    <button 
+                      className="action-btn download" 
+                      onClick={() => handleDownloadReport(assessment.id)}
+                      title="Unduh Laporan"
+                    >
                       <Download size={14} />
                     </button>
                   </div>
@@ -146,65 +193,80 @@ const TeacherDashboard = ({ user, onLogout }) => {
     </div>
   )
 
-  const StudentsTab = () => (
-    <div className="students-content">
-      <div className="section-header">
-        <h3>Data Siswa</h3>
-        <div className="filters">
-          <select className="filter-select">
-            <option value="">Semua Kelas</option>
-            <option value="6A">Kelas 6A</option>
-            <option value="6B">Kelas 6B</option>
-          </select>
+  const StudentsTab = () => {
+    // Filter students based on selected class
+    const filteredStudents = selectedClass ? 
+      students.filter(student => student.class === selectedClass) : 
+      students
+
+    return (
+      <div className="students-content">
+        <div className="section-header">
+          <h3>Data Siswa</h3>
+          <div className="filters">
+            <select 
+              className="filter-select" 
+              value={selectedClass} 
+              onChange={(e) => setSelectedClass(e.target.value)}
+            >
+              <option value="">Semua Kelas</option>
+              <option value="6A">Kelas 6A</option>
+              <option value="6B">Kelas 6B</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="students-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>NISN</th>
+                <th>Kelas</th>
+                <th>Literasi</th>
+                <th>Numerasi</th>
+                <th>Karakter</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredStudents.map(student => (
+                <tr key={student.id}>
+                  <td>{student.name}</td>
+                  <td>{student.nisn}</td>
+                  <td>{student.class}</td>
+                  <td>
+                    <span className={`score ${student.literasi >= 80 ? 'good' : student.literasi >= 60 ? 'fair' : 'poor'}`}>
+                      {student.literasi}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`score ${student.numerasi >= 80 ? 'good' : student.numerasi >= 60 ? 'fair' : 'poor'}`}>
+                      {student.numerasi}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`score ${student.karakter >= 80 ? 'good' : student.karakter >= 60 ? 'fair' : 'poor'}`}>
+                      {student.karakter}
+                    </span>
+                  </td>
+                  <td>
+                    <button 
+                      className="action-btn view" 
+                      onClick={() => handleViewStudent(student.id)}
+                      title="Lihat Detail Siswa"
+                    >
+                      <Eye size={14} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-
-      <div className="students-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>NISN</th>
-              <th>Kelas</th>
-              <th>Literasi</th>
-              <th>Numerasi</th>
-              <th>Karakter</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map(student => (
-              <tr key={student.id}>
-                <td>{student.name}</td>
-                <td>{student.nisn}</td>
-                <td>{student.class}</td>
-                <td>
-                  <span className={`score ${student.literasi >= 80 ? 'good' : student.literasi >= 60 ? 'fair' : 'poor'}`}>
-                    {student.literasi}
-                  </span>
-                </td>
-                <td>
-                  <span className={`score ${student.numerasi >= 80 ? 'good' : student.numerasi >= 60 ? 'fair' : 'poor'}`}>
-                    {student.numerasi}
-                  </span>
-                </td>
-                <td>
-                  <span className={`score ${student.karakter >= 80 ? 'good' : student.karakter >= 60 ? 'fair' : 'poor'}`}>
-                    {student.karakter}
-                  </span>
-                </td>
-                <td>
-                  <button className="action-btn view">
-                    <Eye size={14} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
+    )
+  }
 
   const ReportsTab = () => (
     <div className="reports-content">
@@ -213,7 +275,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
         <div className="report-card">
           <h4>Laporan Kelas</h4>
           <p>Analisis performa per kelas</p>
-          <button className="download-btn">
+          <button className="download-btn" onClick={handleDownloadClassReport}>
             <Download size={16} />
             Unduh PDF
           </button>
@@ -221,7 +283,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
         <div className="report-card">
           <h4>Laporan Individual</h4>
           <p>Detail hasil per siswa</p>
-          <button className="download-btn">
+          <button className="download-btn" onClick={handleDownloadIndividualReport}>
             <Download size={16} />
             Unduh Excel
           </button>
@@ -229,7 +291,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
         <div className="report-card">
           <h4>Analisis Soal</h4>
           <p>Tingkat kesulitan dan validitas soal</p>
-          <button className="download-btn">
+          <button className="download-btn" onClick={handleViewAnalysis}>
             <Download size={16} />
             Lihat Analisis
           </button>

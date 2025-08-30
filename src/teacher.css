@@ -173,6 +173,13 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
 .assessments-table,
@@ -222,11 +229,31 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .action-btn:hover {
   border-color: #667eea;
   color: #667eea;
+  background: #f8f9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.action-btn.view:hover {
+  border-color: #28a745;
+  color: #28a745;
+  background: #f8fff9;
+}
+
+.action-btn.download:hover {
+  border-color: #17a2b8;
+  color: #17a2b8;
+  background: #f8feff;
+}
+
+.action-btn:active {
+  transform: translateY(0);
 }
 
 .score {
@@ -307,6 +334,49 @@
 
 .download-btn:hover {
   background: #5a67d8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Tooltip styles */
+.action-btn[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.action-btn[title]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #333;
+  z-index: 1001;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 /* Responsive Design */
