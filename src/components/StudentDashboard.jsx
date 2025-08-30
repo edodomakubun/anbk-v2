@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Clock, BookOpen, Play, LogOut, User, Calendar } from 'lucide-react'
+import '../dashboard.css'
 
 const StudentDashboard = ({ user, onLogout }) => {
   const navigate = useNavigate()

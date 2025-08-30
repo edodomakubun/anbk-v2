@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Users, BookOpen, BarChart3, Settings, LogOut, User, Plus, Eye, Download } from 'lucide-react'
+import '../teacher.css'
 
 const TeacherDashboard = ({ user, onLogout }) => {
   const [activeTab, setActiveTab] = useState('overview')
